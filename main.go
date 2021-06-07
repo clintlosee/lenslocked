@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/gorilla/mux"
+	"github.com/julienschmidt/httprouter"
 )
 
 func home(w http.ResponseWriter, r *http.Request) {
@@ -28,11 +28,19 @@ func notFound(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "<h1>404. Sorry but we couldn't find the page you were looking for.</h1>")
 }
 
+func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	fmt.Fprint(w, "Welcome!\n")
+}
+
 func main() {
-	r := mux.NewRouter()
-	r.NotFoundHandler = http.HandlerFunc(notFound)
-	r.HandleFunc("/", home)
-	r.HandleFunc("/contact", contact)
-	r.HandleFunc("/faq", faq)
-	http.ListenAndServe(":7000", r)
+	router := httprouter.New()
+	router.GET("/", Index)
+	http.ListenAndServe(":7000", router)
+
+	// r := mux.NewRouter()
+	// r.NotFoundHandler = http.HandlerFunc(notFound)
+	// r.HandleFunc("/", home)
+	// r.HandleFunc("/contact", contact)
+	// r.HandleFunc("/faq", faq)
+	// http.ListenAndServe(":7000", r)
 }
