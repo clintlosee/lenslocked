@@ -56,6 +56,7 @@ builds/**/images/*
 
 # Anything under a tmp folder
 **/tmp/*
+**/exp/*
 
 # Don't include our binary
 lenslocked.com
@@ -65,3 +66,4 @@ images/**
 .config
 notes/**
 .vscode/**
+1980Flyfish!
