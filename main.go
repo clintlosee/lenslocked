@@ -3,8 +3,9 @@ package main
 import (
 	"net/http"
 
+	"lenslocked/views"
+
 	"github.com/gorilla/mux"
-	"lenslocked.com/views"
 )
 
 var homeView *views.View
