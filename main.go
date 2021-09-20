@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"lenslocked/views"
+	"github.com/clintlosee/lenslocked/views"
 
 	"github.com/gorilla/mux"
 )
