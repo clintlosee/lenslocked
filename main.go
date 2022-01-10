@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/clintlosee/lenslocked/views"
@@ -16,19 +17,21 @@ var (
 	signupView  *views.View
 )
 
-func home(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html")
-	must(homeView.Render(w, nil))
+func homeHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	must(homeView.Render(w, nil), w)
+	// tplPath := filepath.Join("templates", "home.gohtml")
+	// executeTemplate(w, tplPath)
 }
 
-func contact(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html")
-	must(contactView.Render(w, nil))
+func contactHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	must(contactView.Render(w, nil), w)
 }
 
-func signup(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html")
-	must(signupView.Render(w, nil))
+func signupHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	must(signupView.Render(w, nil), w)
 }
 
 func main() {
@@ -38,9 +41,9 @@ func main() {
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
-	r.Get("/", home)
-	r.Get("/contact", contact)
-	r.Get("/signup", signup)
+	r.Get("/", homeHandler)
+	r.Get("/contact", contactHandler)
+	r.Get("/signup", signupHandler)
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Page not found", http.StatusNotFound)
 	})
@@ -54,8 +57,21 @@ func main() {
 	// http.ListenAndServe(":7000", r)
 }
 
-func must(err error) {
+func must(err error, w http.ResponseWriter) {
 	if err != nil {
-		panic(err)
+		// panic(err)
+		log.Printf("parsing template: %v", err)
+		http.Error(w, "There was an error parsing the template.", http.StatusInternalServerError)
+		return
 	}
 }
+
+// func executeTemplate(w http.ResponseWriter, filepath string) {
+// 	t, err := views.Parse(filepath)
+// 	if err != nil {
+// 		log.Printf("parsing template: %v", err)
+// 		http.Error(w, "There was an error parsing the template.", http.StatusInternalServerError)
+// 		return
+// 	}
+// 	t.Execute(w, nil)
+// }
